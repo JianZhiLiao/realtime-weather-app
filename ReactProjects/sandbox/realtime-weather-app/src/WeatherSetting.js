@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import styled from "@emotion/styled";
-import { availableLocations } from "./utils";
+import React, { useState } from 'react';
+import styled from '@emotion/styled';
+import { availableLocations } from './utils';
 
 const WeatherSettingWrapper = styled.div`
   position: relative;
@@ -24,7 +24,7 @@ const StyledLabel = styled.label`
   margin-bottom: 15px;
 `;
 
-const StyledInputList = styled.input`
+const StyledSelect = styled.select`
   display: block;
   box-sizing: border-box;
   background: transparent;
@@ -36,6 +36,10 @@ const StyledInputList = styled.input`
   font-size: 16px;
   padding: 7px 10px;
   margin-bottom: 40px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  box-shadow: none;
+  outline: 0;
 `;
 
 const ButtonGroup = styled.div`
@@ -60,6 +64,7 @@ const ButtonGroup = styled.div`
     height: 35px;
     width: 80px;
     border-radius: 5px;
+    font-size: 14px;
 
     &:focus,
     &.focus {
@@ -94,39 +99,40 @@ const WeatherSetting = ({ setCurrentPage, cityName, setCurrentCity }) => {
   const [locationName, setLocationName] = useState(cityName);
 
   const handleChange = (e) => {
-    console.log(e.target.value);
     setLocationName(e.target.value);
   };
 
   const handleSave = () => {
     if (locations.includes(locationName)) {
       console.log(`儲存的地區資訊為：${locationName}`);
+      setCurrentPage('WeatherCard');
       setCurrentCity(locationName);
-      setCurrentPage("WeatherCard");
     } else {
-      alert(`儲存失敗：您輸入的 ${locationName}  並非有效的地區`);
+      alert(`儲存失敗：您輸入的 ${locationName} 並非有效的地區`);
+      return;
     }
   };
 
   return (
     <WeatherSettingWrapper>
-      {console.log("render")}
       <Title>設定</Title>
       <StyledLabel htmlFor="location">地區</StyledLabel>
-      <StyledInputList
-        list="location-list"
+
+      <StyledSelect
         id="location"
         name="location"
         onChange={handleChange}
         value={locationName}
-      />
-      <datalist id="location-list">
+      >
         {locations.map((location) => (
-          <option value={location} key={location} />
+          <option value={location} key={location}>
+            {location}
+          </option>
         ))}
-      </datalist>
+      </StyledSelect>
+
       <ButtonGroup>
-        <Back onClick={() => setCurrentPage("WeatherCard")}>返回</Back>
+        <Back onClick={() => setCurrentPage('WeatherCard')}>返回</Back>
         <Save onClick={handleSave}>儲存</Save>
       </ButtonGroup>
     </WeatherSettingWrapper>

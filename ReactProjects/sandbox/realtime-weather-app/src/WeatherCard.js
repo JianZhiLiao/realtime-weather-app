@@ -1,16 +1,17 @@
-import React from "react";
-import styled from "@emotion/styled";
-import WeatherIcon from "./WeatherIcon.js";
-import { ReactComponent as AirFlowIcon } from "./images/airFlow.svg";
-import { ReactComponent as RainIcon } from "./images/rain.svg";
-import { ReactComponent as RefreshIcon } from "./images/refresh.svg";
-import { ReactComponent as LoadingIcon } from "./images/loading.svg";
-import { ReactComponent as CogIcon } from "./images/cog.svg";
+import React from 'react';
+import styled from '@emotion/styled';
+import dayjs from 'dayjs';
+import WeatherIcon from './WeatherIcon.js';
+import { ReactComponent as AirFlowIcon } from './images/airFlow.svg';
+import { ReactComponent as RainIcon } from './images/rain.svg';
+import { ReactComponent as RefreshIcon } from './images/refresh.svg';
+import { ReactComponent as LoadingIcon } from './images/loading.svg';
+import { ReactComponent as CogIcon } from './images/cog.svg';
 
 const WeatherCardWrapper = styled.div`
   position: relative;
   min-width: 360px;
-  box-shadow: 0 1px 3px 0 #999999;
+  box-shadow: ${({ theme }) => theme.boxShadow};
   background-color: ${({ theme }) => theme.foregroundColor};
   box-sizing: border-box;
   padding: 30px 15px;
@@ -91,7 +92,7 @@ const Refresh = styled.div`
     height: 15px;
     cursor: pointer;
     animation: rotate infinite 1.5s linear;
-    animation-duration: ${({ isLoading }) => (isLoading ? "1.5s" : "0s")};
+    animation-duration: ${({ isLoading }) => (isLoading ? '1.5s' : '0s')};
   }
 
   @keyframes rotate {
@@ -115,7 +116,6 @@ const Cog = styled(CogIcon)`
 
 const WeatherCard = (props) => {
   const { weatherElement, moment, fetchData, setCurrentPage, cityName } = props;
-
   const {
     observationTime,
     temperature,
@@ -124,12 +124,12 @@ const WeatherCard = (props) => {
     weatherCode,
     rainPossibility,
     comfortability,
-    isLoading
+    isLoading,
   } = weatherElement;
 
   return (
     <WeatherCardWrapper>
-      <Cog onClick={() => setCurrentPage("WeatherSetting")} />
+      <Cog onClick={() => setCurrentPage('WeatherSetting')} />
       <Location>{cityName}</Location>
       <Description>
         {description} {comfortability}
@@ -139,8 +139,8 @@ const WeatherCard = (props) => {
           {Math.round(temperature)} <Celsius>°C</Celsius>
         </Temperature>
         <WeatherIcon
-          currentWeatherCode={weatherCode}
-          moment={moment || "day"}
+          weatherCode={weatherCode}
+          moment={moment || 'day'}
         />
       </CurrentWeather>
       <AirFlow>
@@ -153,10 +153,10 @@ const WeatherCard = (props) => {
       </Rain>
       <Refresh onClick={fetchData} isLoading={isLoading}>
         最後觀測時間：
-        {new Intl.DateTimeFormat("zh-TW", {
-          hour: "numeric",
-          minute: "numeric"
-        }).format(new Date(observationTime))}{" "}
+        {new Intl.DateTimeFormat('zh-TW', {
+          hour: 'numeric',
+          minute: 'numeric',
+        }).format(dayjs(observationTime))}{' '}
         {isLoading ? <LoadingIcon /> : <RefreshIcon />}
       </Refresh>
     </WeatherCardWrapper>

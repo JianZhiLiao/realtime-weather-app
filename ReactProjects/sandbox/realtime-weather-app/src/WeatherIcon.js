@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
-import styled from "@emotion/styled";
-import { ReactComponent as DayThunderstorm } from "./images/day-thunderstorm.svg";
-import { ReactComponent as DayClear } from "./images/day-clear.svg";
-import { ReactComponent as DayCloudyFog } from "./images/day-cloudy-fog.svg";
-import { ReactComponent as DayCloudy } from "./images/day-cloudy.svg";
-import { ReactComponent as DayFog } from "./images/day-fog.svg";
-import { ReactComponent as DayPartiallyClearWithRain } from "./images/day-partially-clear-with-rain.svg";
-import { ReactComponent as DaySnowing } from "./images/day-snowing.svg";
-import { ReactComponent as NightThunderstorm } from "./images/night-thunderstorm.svg";
-import { ReactComponent as NightClear } from "./images/night-clear.svg";
-import { ReactComponent as NightCloudyFog } from "./images/night-cloudy-fog.svg";
-import { ReactComponent as NightCloudy } from "./images/night-cloudy.svg";
-import { ReactComponent as NightFog } from "./images/night-fog.svg";
-import { ReactComponent as NightPartiallyClearWithRain } from "./images/night-partially-clear-with-rain.svg";
-import { ReactComponent as NightSnowing } from "./images/night-snowing.svg";
+import React, { useMemo } from 'react';
+import styled from '@emotion/styled';
+import { ReactComponent as DayThunderstorm } from './images/day-thunderstorm.svg';
+import { ReactComponent as DayClear } from './images/day-clear.svg';
+import { ReactComponent as DayCloudyFog } from './images/day-cloudy-fog.svg';
+import { ReactComponent as DayCloudy } from './images/day-cloudy.svg';
+import { ReactComponent as DayFog } from './images/day-fog.svg';
+import { ReactComponent as DayPartiallyClearWithRain } from './images/day-partially-clear-with-rain.svg';
+import { ReactComponent as DaySnowing } from './images/day-snowing.svg';
+import { ReactComponent as NightThunderstorm } from './images/night-thunderstorm.svg';
+import { ReactComponent as NightClear } from './images/night-clear.svg';
+import { ReactComponent as NightCloudyFog } from './images/night-cloudy-fog.svg';
+import { ReactComponent as NightCloudy } from './images/night-cloudy.svg';
+import { ReactComponent as NightFog } from './images/night-fog.svg';
+import { ReactComponent as NightPartiallyClearWithRain } from './images/night-partially-clear-with-rain.svg';
+import { ReactComponent as NightSnowing } from './images/night-snowing.svg';
 
 const weatherTypes = {
   isThunderstorm: [15, 16, 17, 18, 21, 22, 33, 34, 35, 36, 41],
@@ -36,9 +36,9 @@ const weatherTypes = {
     31,
     32,
     38,
-    39
+    39,
   ],
-  isSnowing: [23, 37, 42]
+  isSnowing: [23, 37, 42],
 };
 
 const weatherIcons = {
@@ -49,7 +49,7 @@ const weatherIcons = {
     isCloudy: <DayCloudy />,
     isFog: <DayFog />,
     isPartiallyClearWithRain: <DayPartiallyClearWithRain />,
-    isSnowing: <DaySnowing />
+    isSnowing: <DaySnowing />,
   },
   night: {
     isThunderstorm: <NightThunderstorm />,
@@ -58,8 +58,8 @@ const weatherIcons = {
     isCloudy: <NightCloudy />,
     isFog: <NightFog />,
     isPartiallyClearWithRain: <NightPartiallyClearWithRain />,
-    isSnowing: <NightSnowing />
-  }
+    isSnowing: <NightSnowing />,
+  },
 };
 
 const IconContainer = styled.div`
@@ -70,29 +70,22 @@ const IconContainer = styled.div`
   }
 `;
 
-const weatherCode2Type = (weatherCode) =>
-  Object.entries(weatherTypes).reduce(
-    (currentWeatherType, [weatherType, weatherCodes]) =>
+const weatherCode2Type = (weatherCode) => {
+  const [weatherType] =
+    Object.entries(weatherTypes).find(([weatherType, weatherCodes]) =>
       weatherCodes.includes(Number(weatherCode))
-        ? weatherType
-        : currentWeatherType,
-    ""
-  );
+    ) || [];
 
-const WeatherIcon = ({ currentWeatherCode, moment }) => {
-  const [currentWeatherIcon, setCurrentWeatherIcon] = useState("isClear");
+  return weatherType;
+};
 
-  const theWeatherIcon = useMemo(() => weatherCode2Type(currentWeatherCode), [
-    currentWeatherCode
+const WeatherIcon = ({ weatherCode, moment }) => {
+  const weatherType = useMemo(() => weatherCode2Type(weatherCode), [
+    weatherCode,
   ]);
+  const weatherIcon = weatherIcons[moment][weatherType];
 
-  useEffect(() => {
-    setCurrentWeatherIcon(theWeatherIcon);
-  }, [theWeatherIcon]);
-
-  return (
-    <IconContainer>{weatherIcons[moment][currentWeatherIcon]}</IconContainer>
-  );
+  return <IconContainer>{weatherIcon}</IconContainer>;
 };
 
 export default WeatherIcon;
